@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <p>下拉刷新</p>
+  <div id="box">
+    
+  </div>
+  <script>
+    var setY = function (translateY,which) {
+        which.style.transform = 'translateY(' + translateY + 'px)';
+    }
+    var addTransition = function (which) {
+        which.style.transition = 'all 0.3s';
+    }
+    var removeTransition = function (which) {
+        which.style.transition = 'none';
+    }
+
+    var box = document.querySelector('#box');
+    var p = document.querySelector('p');
+    var startY = 0;
+    box.addEventListener('touchstart',function(e) {
+      p.innerText = '下拉刷新'
+     startY = e.touches[0].clientY;
+     removeTransition(box)
+     removeTransition(p)
+    })
+    box.addEventListener('touchmove',function(e) {
+      var moveY = e.touches[0].clientY;
+      var changeY = moveY - startY;
+      if(changeY > 30) {
+        p.innerText = '松开刷新'
+      }
+      setY(changeY,box)
+      setY(changeY,p)
+    })
+    box.addEventListener('touchend',function(e) {
+      setY(-0,box)
+      setY(0,p)
+      addTransition(box)
+      addTransition(p)
+      p.innerText = "正在加载"
+      setTimeout(function(){
+      setY(-20,box)
+      },1000)
+    })
+  </script>
+</body>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  html,body {
+    height: 100%;
+    text-align: center;
+  }
+  #box {
+    height: 100%;
+    background-color: lightcyan;
+    transform: translateY(-20px)
+  }
+</style>
+</html>
